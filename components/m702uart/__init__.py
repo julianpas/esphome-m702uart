@@ -37,7 +37,7 @@ M702UARTComponent = m702uart_ns.class_("M702UARTComponent", cg.PollingComponent,
 CONFIG_SCHEMA = (
     cv.Schema(
         {
-            cv.GenerateID(): cv.declare_id(N702BComponent),
+            cv.GenerateID(): cv.declare_id(M702UARTComponent),
             cv.Optional(CONF_ECO2): sensor.sensor_schema(
                 unit_of_measurement=UNIT_PARTS_PER_MILLION,
                 accuracy_decimals=0,

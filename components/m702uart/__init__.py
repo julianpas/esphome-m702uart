@@ -22,6 +22,7 @@ from esphome.const import (
 )
 
 DEPENDENCIES = ["uart"]
+AUTO_LOAD = ["sensor", "binary_sensor", "text_sensor"]
 
 CONF_ECO2 = "eco2"
 CONF_OZONE = "ozone"

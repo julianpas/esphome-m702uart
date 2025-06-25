@@ -16,7 +16,7 @@ from esphome.const import (
     STATE_CLASS_MEASUREMENT,
     UNIT_PARTS_PER_MILLION,
     UNIT_PARTS_PER_BILLION,
-    UNIT_MICROGRAM_PER_CUBIC_METER,
+    UNIT_MICROGRAMS_PER_CUBIC_METER,
     UNIT_CELSIUS,
     UNIT_PERCENT,
 )
@@ -57,13 +57,13 @@ CONFIG_SCHEMA = (
                 state_class=STATE_CLASS_MEASUREMENT,
             ),
             cv.Optional(CONF_PM_2_5): sensor.sensor_schema(
-                unit_of_measurement=UNIT_MICROGRAM_PER_CUBIC_METER,
+                unit_of_measurement=UNIT_MICROGRAMS_PER_CUBIC_METER,
                 accuracy_decimals=0,
                 device_class=DEVICE_CLASS_PM25,
                 state_class=STATE_CLASS_MEASUREMENT,
             ),
             cv.Optional(CONF_PM_10): sensor.sensor_schema(
-                unit_of_measurement=UNIT_MICROGRAM_PER_CUBIC_METER,
+                unit_of_measurement=UNIT_MICROGRAMS_PER_CUBIC_METER,
                 accuracy_decimals=0,
                 device_class=DEVICE_CLASS_PM10,
                 state_class=STATE_CLASS_MEASUREMENT,

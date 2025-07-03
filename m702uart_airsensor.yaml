@@ -28,6 +28,12 @@ wifi:
 
 captive_portal:
 
+# I2C Bus Configuration
+i2c:
+  sda: GPIO5  # D1 on NodeMCU/Wemos D1 Mini
+  scl: GPIO4  # D2 on NodeMCU/Wemos D1 Mini
+  id: bus_a
+
 # External component for M702UART sensor
 external_components:
   - source: github://julianpas/esphome-m702uart@main
@@ -36,10 +42,29 @@ external_components:
 
 # UART configuration for M702UART sensor
 uart:
-  # tx_pin: GPIO5  # D10 (TX)
-  rx_pin: GPIO4  # D9 (RX)
+  rx_pin: GPIO14  # D5 (RX)
   baud_rate: 9600
   id: uart_m702uart
+
+# LCD Display Configuration
+display:
+  - platform: lcd_pcf8574
+    dimensions: 20x4
+    address: 0x27  # I2C address for PCF8574
+    lambda: |-
+      // Line 1: CO2 and Temperature
+      it.printf(0, 0, "CO2:%4.0fppm T:%4.1fC", id(eco2_sensor).state, id(temp_sensor).state);
+      // Line 2: Humidity and TVOC
+      it.printf(0, 1, "H:%4.1f%% TVOC:%4.0fppb", id(humidity_sensor).state, id(tvoc_sensor).state);
+      // Line 3: PM2.5 and PM10
+      it.printf(0, 2, "PM2.5:%3.0f PM10:%3.0f", id(pm25_sensor).state, id(pm10_sensor).state);
+      // Line 4: Ozone and Status
+      if (id(data_valid_sensor).state) {
+        it.printf(0, 3, "O3:%3.0fppb [VALID]", id(ozone_sensor).state);
+      } else {
+        it.printf(0, 3, "O3:%3.0fppb [ERROR]", id(ozone_sensor).state);
+      }
+    update_interval: 30s
 
 # M702UART Air Quality Sensor
 m702uart:
@@ -47,48 +72,56 @@ m702uart:
   update_interval: 30s
   eco2:
     name: "eCO2"
+    id: eco2_sensor
     unit_of_measurement: "ppm"
     device_class: "carbon_dioxide"
     state_class: "measurement"
     icon: "mdi:molecule-co2"
   ozone:
     name: "Ozone"
+    id: ozone_sensor
     unit_of_measurement: "ppb"
     device_class: "ozone"
     state_class: "measurement"
     icon: "mdi:chemical-weapon"
   tvoc:
     name: "TVOC"
+    id: tvoc_sensor
     unit_of_measurement: "ppb"
     device_class: "volatile_organic_compounds"
     state_class: "measurement"
     icon: "mdi:air-filter"
   pm_2_5:
     name: "PM2.5"
+    id: pm25_sensor
     unit_of_measurement: "µg/m³"
     device_class: "pm25"
     state_class: "measurement"
     icon: "mdi:blur"
   pm_10:
     name: "PM10"
+    id: pm10_sensor
     unit_of_measurement: "µg/m³"
     device_class: "pm10"
     state_class: "measurement"
     icon: "mdi:blur"
   temperature:
     name: "Temperature"
+    id: temp_sensor
     unit_of_measurement: "°C"
     device_class: "temperature"
     state_class: "measurement"
     accuracy_decimals: 2
   humidity:
     name: "Humidity"
+    id: humidity_sensor
     unit_of_measurement: "%"
     device_class: "humidity"
     state_class: "measurement"
     accuracy_decimals: 2
   data_valid:
     name: "Sensor Data Valid"
+    id: data_valid_sensor
     device_class: "connectivity"
   sensor_status:
     name: "Sensor Status"
